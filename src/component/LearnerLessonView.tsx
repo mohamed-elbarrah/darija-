@@ -55,15 +55,14 @@ export const DUMMY_LESSON_DATA = {
         },
         // --- ACTIVITY 2: Fill-in-the-Blanks with Word Blocks ---
         {
-
             id: 2,
             type: "fill-in-blanks",
-            // ✅ تم دمج التعريفين في تعريف واحد
             question: { 
-                text: "Smeety Alex, o {nty}?", // الجملة بالدارجة والقوالب
-                translation: "Complete the phrase by tapping the correct word blocks:", // السؤال بالإنجليزية
+                text: "Smeety Alex, o {nty}?", 
+                translation: "How about you? (Addressing a female)", 
                 audioUrl: "/audio/q_blanks.mp3" 
-            },            wordPool: ["nta", "nty", "Labass", "Smeetk"], // All available words
+            }, 
+            wordPool: ["nta", "nty", "Labass", "Smeetk"],
             feedback: "Remember to use NTY when asking a female.",
         },
         // --- ACTIVITY 3: Dialogue / Listening ---
@@ -138,11 +137,11 @@ const LearnerLessonView = ({ lessonData }) => {
 
     // Effect to initialize word blocks when activity changes
     useEffect(() => {
-        if (currentContent.type === 'fill-in-blanks' && !isAnswered) {
+        if (isActivity && currentContent.type === 'fill-in-blanks' && !isAnswered) {
             setAvailableWords([...currentContent.wordPool].sort(() => Math.random() - 0.5));
             setBlanksState({});
         }
-    }, [step, isAnswered, currentContent.type]);
+    }, [step, isAnswered]);
 
 
     // --- HANDLERS ---
@@ -187,14 +186,13 @@ const LearnerLessonView = ({ lessonData }) => {
                 break;
 
             case 'fill-in-blanks':
-                // Check if all blanks are filled and if the filled word matches the correct word
                 correct = blankParts.every(part => blanksState[part.blank] === part.correct);
                 break;
                 
             case 'dialogue':
             case 'match-image':
-            case 'ordering': // Ordering is now simplified/removed, but keep case for safety
-                correct = true; // Assume pass if checked
+            case 'ordering':
+                correct = true;
                 break;
 
             default:
@@ -353,7 +351,7 @@ const LearnerLessonView = ({ lessonData }) => {
             <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
                 <div className="text-center bg-white p-10 rounded-xl shadow-2xl">
                     <h1 className="text-4xl font-extrabold text-green-600 mb-4">🎉 Congratulations!</h1>
-                    <p className="text-xl text-gray-700">You have completed the **{lessonData.title}** lesson successfully.</p>
+                    <p className="text-xl text-gray-700">You have completed the <strong>{lessonData.title}</strong> lesson successfully.</p>
                 </div>
             </div>
         );
@@ -433,4 +431,6 @@ const LearnerLessonView = ({ lessonData }) => {
     );
 };
 
-export default LearnerLessonView;
+export default function App() {
+    return <LearnerLessonView lessonData={DUMMY_LESSON_DATA} />;
+}
